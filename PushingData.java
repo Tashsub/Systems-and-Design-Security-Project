@@ -6,7 +6,12 @@ import java.util.*;
 public class FindDrivers {
 	
 	
-	
+	/*
+	 * 
+	 * Function: containsTrue 
+	 * Takes in a list of booleans and a target value (in this case true)
+	 * will see if that list contains true, if it does will return true else false
+	 */
 	public static boolean containsTrue(boolean[] arr, boolean targetValue) {
 		for(boolean s: arr){
 			if(s == targetValue)
@@ -14,6 +19,46 @@ public class FindDrivers {
 		}
 		return false;
 	}
+	
+	/*
+	 * Takes in a string, that being the user input 
+	 * and checks if any of that input contains forbidden words 
+	 * 
+	 */
+	public static boolean userInput(String word){
+		
+		 
+		 //Array contains all the words that the userInput cannot contain 
+		 String[] forbiddenWords = new String[]{ "drop", "take"};
+		 
+		 
+	     int i; 
+	     //Creates a new array arr where
+	     //The Size of array will be equal to the number of elements within forbiddenWords array. 
+	     boolean[] arr = new boolean[forbiddenWords.length];
+
+	 
+	    // Takes the userInput and checks if it contains any of the words in forbiddenWords array. 
+	    // Iterates through forbiddenWords array and produces a list of booleans 
+	    for(i=0; i< forbiddenWords.length; i++) {
+	     arr[i]= (word.toLowerCase().contains(forbiddenWords[i])); 
+	    }
+	    
+	    //System.out.println(java.util.Arrays.toString(arr));
+		
+	    //System.out.println(containsTrue(arr, true)); 
+	    
+	    /*
+	     * Checks if the list contains at least one true. 
+	     * If so return true
+	     * This means that the userInput contains a forbidden word  
+	     */
+	    return containsTrue(arr, true);
+		
+	}
+   
+	
+	 
 
  public static void main(String[] args) throws Exception {
 	    System.out.println("\nDrivers loaded as properties:");
@@ -29,7 +74,7 @@ public class FindDrivers {
 	     
 	 try {
 		 
-		 Class.forName("org.gjt.mm.mysql.Driver").newInstance();
+		 Class.forName("org.gjt.mm.mysql.Driver");
 		 //String DB = "jdbc:mysql://stusql.dcs.shef.ac.uk/team037", "team037" , "d84f5e63";
 		 
 		 
@@ -72,9 +117,11 @@ public class FindDrivers {
 		 ps.setBoolean(9,  isReviewer);
 		 
 		 /*
+		  * This pushes code into the database 
+		  * 
 		 int x = ps.executeUpdate(); 
 		 if(x > 0 ) {
-			 System.out.println("Updating datebase");
+			 System.out.println("Updating database");
 		 }else{
 			 System.out.println("System not working"); 
 			  }
@@ -82,45 +129,21 @@ public class FindDrivers {
 		 
 		 
 		 // https://dev.mysql.com/doc/mysql-getting-started/en/
-		 
-	    //iterate through user input
-		 String userInput = "Drop";
-		 String[] checker = new String[]{ "drop", "take", "okay"}; 
-	     int i; 
-	     boolean[] arr = new boolean[checker.length]; 
-	     ArrayList<Boolean> contansBoolVals = new ArrayList<Boolean>();
-	 
-	    for(i=0; i< checker.length; i++) {
-	     arr[i]= (userInput.toLowerCase().contains(checker[i]));		
-	    }
-		 
-	    System.out.println(java.util.Arrays.toString(arr));
+	
     	
+	
+	    System.out.println(userInput("drop")); 
+         
 	    
 	    
-	    /*
-	     * 
-	     * Checks if the list contains atleast one true. 
-	     * If so return true
-	     * 
-	     */
-	    System.out.println(containsTrue(arr, true)); 
-	    
-	    
-	    /*
-	     * if one true stop
-	     * if 0 true update database 
-	     * 
-	     * 
-	     */
 	 }
-
+	
 	 catch (SQLException ex) {
 	     ex.printStackTrace();
 	 }
 	 finally {
 	   if (con != null) con.close();
 	 }
-	    
+
 	    }
 }
