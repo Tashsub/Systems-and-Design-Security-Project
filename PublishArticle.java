@@ -1,21 +1,11 @@
 public class PublishArticle {
 
-	String submissionTitle; 
-	String submisisonAbstract; 
-	String submissionLink; 
+	Submission SubmissionInfo; 
 	String mainAuthor; 
 	String authors;
+	Permission finalDecision; 
 	
-	
-	 enum Verdict{
-	    StrongAccept, WeakAccept, WeakReject, StrongReject  
-	    }
-	    
-	Verdict reviewer1; 
-    Verdict reviewer2; 
-    Verdict reviewer3;
-	
-    public PublishArticle( ) {
+    public void publish(Permission finalDecision, Submission SubmissionInfo ) {
 
     }
 	
