@@ -1,11 +1,19 @@
 public class VerdictEnum{
 
     enum Verdict{
-        Champion, WeakAccept, WeakReject, Detractor
+        StrongAccept, WeakAccept, WeakReject, StrongReject
     }
 
+    enum Rating{
+        Champion, Detractor 
+    }
+
+    
+
     public static void main (String[] args){
-        Verdict lol = Verdict.Champion; 
+    
+        VerdictEnum k = new VerdictEnum();
+          
         //System.out.println(lol); 
     }
 
