@@ -10,13 +10,14 @@ public class Permission extends VerdictEnum{
     Rating perm_2; 
     Rating perm_3; 
 
-/*
+    /*
     public Permission(Verdict perm1, Verdict perm2, Verdict perm3){
         this.perm1 = perm1; 
         this.perm2 = perm2; 
         this.perm3 = perm3; 
     }
-*/
+    */
+
     public Permission(Rating perm_1, Rating perm_2, Rating perm_3){
         this.perm_1 = perm_1; 
         this.perm_2 = perm_2; 
@@ -24,10 +25,9 @@ public class Permission extends VerdictEnum{
     }
 
 
-
     public int count( String[] array){
         //String[] arr = {"Champion"}; 
-        String c = "Champion"; 
+        String c = "Champion";
 
         int i;
         int champC = 0;  
