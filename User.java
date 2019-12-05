@@ -24,26 +24,24 @@ public class User{
   	protected boolean isEditor;
   	protected boolean isAuthor;
   	
+  	//Open connection Method
+  	public static void openConnection() throws SQLException, ClassNotFoundException {
+  		Class.forName("org.gjt.mm.mysql.Driver");
+  		conn = DriverManager.getConnection(DB_URL, USER, PASS);
+  		stmt = conn.createStatement();
+  	}
+  	
   	
     //Within User we will have the author/reviewer and editor 
-    
-    
-    
+
+  	
   //------------------------ Author --------------------------
     public static void createAuthor() throws ClassNotFoundException, SQLException {
     	try{
     		
-            Class.forName("org.gjt.mm.mysql.Driver");
-
-            //open a connection
-            System.out.println("Connecting to a selected database...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Connected database successfully...");
-
-            //execute a query
-            System.out.println("Creating table in given database...");
-            stmt = conn.createStatement();
-
+            openConnection();
+            
+            
             String sql = "CREATE TABLE Author " +
             "(Title  VARCHAR(100), " +
             " Forname VARCHAR(150), " + 
@@ -74,16 +72,7 @@ public class User{
     public static void createEditor() throws ClassNotFoundException, SQLException {
     	try{
     		
-            Class.forName("org.gjt.mm.mysql.Driver");
-
-            //open a connection
-            System.out.println("Connecting to a selected database...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Connected database successfully...");
-
-            //execute a query
-            System.out.println("Creating table in given database...");
-            stmt = conn.createStatement();
+    		 openConnection();
 
             String sql = "CREATE TABLE Editor " +
             "(Title  VARCHAR(100), " +
@@ -115,16 +104,7 @@ public class User{
     public static void createReviewer() throws ClassNotFoundException, SQLException {
     	try{
     		
-            Class.forName("org.gjt.mm.mysql.Driver");
-
-            //open a connection
-            System.out.println("Connecting to a selected database...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Connected database successfully...");
-
-            //execute a query
-            System.out.println("Creating table in given database...");
-            stmt = conn.createStatement();
+    		 openConnection();
 
             String sql = "CREATE TABLE Reviewer " +
             "(Title  VARCHAR(100), " +
@@ -156,16 +136,7 @@ public class User{
     public static void initialiseUsertable() throws ClassNotFoundException, SQLException{
 
         try{
-            Class.forName("org.gjt.mm.mysql.Driver");
-
-            //open a connection
-            System.out.println("Connecting to a selected database...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Connected database successfully...");
-
-            //execute a query
-            System.out.println("Creating table in given database...");
-            stmt = conn.createStatement();
+        	 openConnection();
 
             String sql = "CREATE TABLE User (" +
             		"title VARCHAR (150)," +
@@ -195,10 +166,11 @@ public class User{
 
     }
     
-    public static void insertData(String title, String forename, String surname, String university, String loginID, String password, boolean isReviewer, boolean isEditor, boolean isAuthor) throws ClassNotFoundException, SQLException {
+    //----------------------Insert data into User table-------------------
+    
+    public void insertData(String title, String forename, String surname, String university, String loginID, String password, boolean isReviewer, boolean isEditor, boolean isAuthor) throws ClassNotFoundException, SQLException {
     	try {
-    		Class.forName("org.gjt.mm.mysql.Driver");
-    		conn = DriverManager.getConnection(DB_URL, USER, PASS);
+    		 openConnection();
     		//creating the query that will be inserted into the database
     		String query = " insert into User (title, forename, surname, university, loginID, password, isReviewer, isEditor, isAuthor)"
     				+ " values (?,?,?,?,?,?,?,?,?)"; 
@@ -225,6 +197,84 @@ public class User{
           if (conn != null) conn.close();
         }	
     }
+    
+   
+    //---------------- Return password from database 
+    
+    //return the password if found  and if not then return null; 
+    //takes in a string, ideally the username/loginID and checks if that username exists if so return its corresponding password
+    public static String checkUser(String userName) throws SQLException {
+    	String userPassword = null;
+    	String sql = "SELECT password FROM User WHERE email = `qwe@sheffield.ac.uK` ";
+    	try {
+    		 openConnection();
+		
+    	PreparedStatement st = conn.prepareStatement("SELECT * FROM User WHERE  loginID =?");
+    	st.setString(1,userName);
+    	ResultSet res = st.executeQuery();
+    	
+    	//if a password exists matching the loginID then find the password
+    	if(res.next()==true) {
+    		 userPassword = res.getString("password");
+    	}else {
+    		userPassword = null; 
+    	}
+    	
+		conn.close();
+		
+    	}catch (Exception e) {
+    		System.out.println("Got an exception!"); 
+    		System.out.println(e.getMessage()); 
+    	}
+        finally {
+          if (conn != null) conn.close();
+        }
+    	return userPassword;
+    	
+    }
+    
+    //--------Update method for isAuthor, isEditor, isReviewer
+    
+    public static void updateTypeOfUser(String loginID, boolean isAuthor, boolean isEditor, boolean isReviewer) throws SQLException {
+    	
+    	try {
+    		openConnection();
+    		
+    		String query1 = "update User set isAuthor = ? where loginID = ?"; 
+    		String query2 = "update User set isEditor = ? where loginID = ?"; 
+    		String query3 = "update User set isReviewer = ? where loginID = ?"; 
+    		
+    		PreparedStatement preparedStmt1 = conn.prepareStatement( query1);
+    		PreparedStatement preparedStmt2 = conn.prepareStatement( query2);
+    		PreparedStatement preparedStmt3 = conn.prepareStatement( query3);
+    		
+    		
+    		preparedStmt1.setBoolean  (1, isAuthor);
+    	    preparedStmt1.setString(2,loginID );
+    	    
+    	    preparedStmt2.setBoolean (1, isEditor  );
+    	    preparedStmt2.setString(2, loginID);
+    	    
+    	    preparedStmt3.setBoolean   (1, isReviewer);
+    	    preparedStmt3.setString(2, loginID);
+    		
+    	    
+    	    preparedStmt1.execute();
+    	    preparedStmt2.execute();
+    	    preparedStmt3.execute();
+    	    
+    	    conn.close();
+    	    
+    		}catch (Exception e) {
+        		System.out.println("Got an exception!"); 
+        		System.out.println(e.getMessage()); 
+        	}
+            finally {
+              if (conn != null) conn.close();
+            }
+    	
+    }
+    
   
   public static void main(String[] args) throws ClassNotFoundException, SQLException {
 	  
@@ -232,7 +282,8 @@ public class User{
 	  //createAuthor();
 	  //createEditor(); 
 	  //createReviewer(); 
-	  
+	  //System.out.println(checkUser("qwe@sheffield.ac.uk"));
+	 // updateTypeOfUser("qwe@sheffield.ac.uk", true, true, false );
 	  
 	  
   }
