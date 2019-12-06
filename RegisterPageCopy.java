@@ -166,106 +166,136 @@ public class RegisterPage extends JFrame {
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String title ;
-				String value = comboBoxMr.getSelectedItem().toString();
-				
-				if( value == "Mr") {
-					title = "Mr";
-				}else if(value ==  "Mrs") {
-					title = "Mrs";
-				}else if (value == "Dr") {
-					title = "Dr";
-				}else if (value=="Prof") {
-					title = "Prof";
-				}
-				else{
-					title = "none";
-					lblErrors.setText("Please select your Title"); 
-				}
 				
 				
-				String forname = txtForename.getText();
-				String surname = txtSurname.getText(); 
-				String university = txtUni.getText();
-				String email = txtEmail.getText(); 
-				String confirmEmail = txtConfEmail.getText();
-				String password = passwordField.getText();; 
-				String confirmPassword = passwordConfirmField.getText();
 				
-				//System.out.println(title);
-				//Set all to false to initialise
-				boolean author = false; 
-				boolean reviewer = false; 
-				boolean editor = false; 
-				
+		
+		String title ;
+		String value = comboBoxMr.getSelectedItem().toString();
+		
+		if( value == "Mr") {
+			title = "Mr";
+		}else if(value ==  "Mrs") {
+			title = "Mrs";
+		}else if (value == "Dr") {
+			title = "Dr";
+		}else if (value=="Prof") {
+			title = "Prof";
+		}
+		else{
+			title = "none";
+			lblErrors.setText("Please select your Title"); 
+		}
+		
+		
+		String forname = txtForename.getText();
+		String surname = txtSurname.getText(); 
+		String university = txtUni.getText();
+		String email = txtEmail.getText(); 
+		String confirmEmail = txtConfEmail.getText();
+		String password = passwordField.getText();; 
+		String confirmPassword = passwordConfirmField.getText();
+		
+		//System.out.println(title);
+		//Set all to false to initialise
+		boolean author = false; 
+		boolean reviewer = false; 
+		boolean editor = false; 
+		
 
-				//check all the fields have been completed
-				//if all fields are not null then sign up user 
-				if( isNull(forname) == true )   {
-					lblErrors.setText("Please enter a valid Forname");
-				}else if ( isNull(surname) == true  ) {
-					lblErrors.setText("Please enter a valid Surname");
-				}else if (isNull(university) == true ) {
-					lblErrors.setText("Please enter a valid University");
-				}else if  ( validateEmail(email)== false ) {
-					lblErrors.setText("Please enter a valid Email");
-				}else if (isNull(password) == true) {
-					lblErrors.setText("Please enter a Password");
-				}else if( isPasswordValid(password) == false) {
-					lblErrors.setText( "Ensure your password has one UpperCase letter, 5-12 characters and 1 number" );
-				}else if(isNull(confirmPassword)) {
-					lblErrors.setText("Please confirm Password");
-				}else if(email.equals(confirmEmail)==false) {
-					lblErrors.setText("Please make sure both emails match");
-				}else if(password.equals(confirmPassword)==false) {
-					lblErrors.setText( "Please make sure both passowords match" );
-				} else
-					try {
-						if(User.checkEmailExists(email) == true) {
-							lblErrors.setText( "This email is already in use" );
-						}
-					} catch (SQLException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
-				
-				
-				//This is the final check the login page will have to pass
-				//if all the fields in the login are not null and satisfy the above 
-				//then the user will be allowed to sign up as a user
-				
-				try {
-					if( (isNull(forname) == false  && isNull(surname) ==false   && isNull(university) == false  && validateEmail(email)== true && isNull(password) == false
-							&& isPasswordValid(password) == true && (isNull(confirmEmail)== false && email.equals(confirmEmail)==true) && password.equals(confirmPassword)==true) && User.checkEmailExists(email) == false
-							){
-						lblErrors.setForeground(Color.black);
-						lblErrors.setText("Thank You For Signing Up");
-					}
-				} catch (SQLException e2) {
-				
-					e2.printStackTrace();
+		//change the value of the user 
+		if (LogInPage.register == true) {
+			author = true; 
+		}else if (LogInPage.register == false) {
+			editor = true; 
+		} 
+		
+		
+		
+		//check all the fields have been completed
+		//if all fields are not null then sign up user 
+		if( isNull(forname) == true )   {
+			lblErrors.setText("Please enter a valid Forname");
+		}else if ( isNull(surname) == true  ) {
+			lblErrors.setText("Please enter a valid Surname");
+		}else if (isNull(university) == true ) {
+			lblErrors.setText("Please enter a valid University");
+		}else if  ( validateEmail(email)== false ) {
+			lblErrors.setText("Please enter a valid Email");
+		}else if (isNull(password) == true) {
+			lblErrors.setText("Please enter a Password");
+		}else if( isPasswordValid(password) == false) {
+			lblErrors.setText( "Ensure your password has one UpperCase letter, 5-12 characters and 1 number" );
+		}else if(isNull(confirmPassword)) {
+			lblErrors.setText("Please confirm Password");
+		}else if(email.equals(confirmEmail)==false) {
+			lblErrors.setText("Please make sure both emails match");
+		}else if(password.equals(confirmPassword)==false) {
+			lblErrors.setText( "Please make sure both passowords match" );
+		} else
+			try {
+				if(User.checkEmailExists(email) == true) {
+					lblErrors.setText( "This email is already in use" );
 				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 				
+				
+		//This is the final check the login page will have to pass
+		//if all the fields in the login are not null and satisfy the above 
+		//then the user will be allowed to sign up as a user
+		
+		try {
+			if( (isNull(forname) == false  && isNull(surname) ==false   && isNull(university) == false  && validateEmail(email)== true && isNull(password) == false
+					&& isPasswordValid(password) == true && (isNull(confirmEmail)== false && email.equals(confirmEmail)==true) && password.equals(confirmPassword)==true) && User.checkEmailExists(email) == false
+					){
+				lblErrors.setForeground(Color.black);
+				lblErrors.setText("Thank You For Signing Up");
+			}
+		} catch (SQLException e2) {
+		
+			e2.printStackTrace();
+		}
+		
 
-				//execute the query and add data into the data base over here
-				if(lblErrors.getText().equals("Thank You For Signing Up")) {
-					//create a user
-					User pushData = new User(); 
+		//execute the query and add data into the data base over here
+		if(lblErrors.getText().equals("Thank You For Signing Up" )) {
+			//create a user
+			User pushData = new User(); 
+			
+			try {
+				//push data into DB
+				pushData.insertData(title, forname, surname, university, email, confirmPassword.hashCode(), reviewer, editor, author);
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 					
-					try {
-						//push data into DB
-						pushData.insertData(title, forname, surname, university, email, confirmPassword, reviewer, editor, author);
-					} catch (ClassNotFoundException | SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+		try {
+			//waits a few seconds before calling the loginPage/HomePage
+			  Thread.sleep(1000);
+			  
+			  
+			  //The system rembers which register option the user picked
+			  //if the user picked Submit article they are an author
+			  //if they clicked add new journal then they are an editor 
+			  
+			  if (LogInPage.register == true) {
+					 
+					SubmitArticlePage s = new SubmitArticlePage();
+					s.setVisible(true);
+					dispose(); 
+				
+			}else if (LogInPage.register == false) {
 					
-					try {
-						//waits a few seconds before calling the loginPage/HomePage
-						  Thread.sleep(1000);
-						  LogInPage callLogin = new LogInPage(); 
-						  callLogin.setVisible(true);
-						  dispose();
+					NewJournalPage j = new NewJournalPage();
+					j.setVisible(true);
+				    dispose();
+					} 
+					
+				  
 					}catch(InterruptedException ex){
 					    Thread.currentThread().interrupt();
 					}
@@ -285,7 +315,6 @@ public class RegisterPage extends JFrame {
 				
 				LogInPage callhome = new LogInPage(); 
 				callhome.setVisible(true);
-				
 				dispose();
 				
 				
