@@ -65,7 +65,7 @@ public class Database {
     public static void delete(String table, String col, String value) throws ClassNotFoundException, SQLException {
     	try {
        	    openConnection();
-       	    String sql = "DROP TABLE "+table+" WHERE "+ col +" = '"+ value +"'";
+       	    String sql = "DELETE FROM "+table+" WHERE "+ col +" = "+ value;
       		stmt.executeUpdate(sql);
        	   
        	}catch (SQLException ex) {
@@ -380,16 +380,16 @@ public class Database {
     }
 
     //Create Editors table
+    int journalISSNe;
     String submission;
     String editedArticle;
-    String chiefEditor;
     String editor;
     String newPassword;
     	
-    public void Editors (String submission, String editedArticle, String chiefEditor, String editor, String newPassword) {
-        this.submission = submission;
+    public void Editors (int journalISSNe, String submission, String editedArticle, String editor, String newPassword) {
+        this.journalISSNe = journalISSNe;
+    	this.submission = submission;
         this.editedArticle = editedArticle;
-        this.chiefEditor = chiefEditor;
         this.editor = editor;
         this.newPassword = newPassword;
     }
@@ -399,11 +399,11 @@ public class Database {
             openConnection();
             	
             String sql = "CREATE TABLE Editors (" +
-                "Submission VARCHAR (100)," +
-                "EditedArticle VARCHAR (100)," +
-                "ChiefEditor VARCHAR (50)," +
-    		    "Editor VARCHAR (100),"+
-    		    "NewPassword VARCHAR (50))";
+            	"JournalISSN INT (50), " +
+                "Submission VARCHAR (100), " +
+                "EditedArticle VARCHAR (100), " +
+    		    "Editor VARCHAR (40), "+
+    		    "NewPassword VARCHAR (20))";
                 
                 //Creates the table in the database
                 stmt.executeUpdate(sql);
@@ -420,17 +420,17 @@ public class Database {
     }
         
     // insert and select functions
-    public static void insertEditorsData(String submission, String editedArticle, String chiefEditor, String editor, String newPassword) throws ClassNotFoundException, SQLException {
+    public static void insertEditorsData(int journalISSN, String submission, String editedArticle, String editor, String newPassword) throws ClassNotFoundException, SQLException {
         try {
             openConnection();
         		
             //creating the query that will be inserted into the database
-        	String query = " insert into Editors (submission, editedArticle, chiefEditor, editor, newPassword)"
+        	String query = " insert into Editors (journalISSN, submission, editedArticle, editor, newPassword)"
         		+ " values (?,?,?,?,?)"; 
             PreparedStatement stmt = conn.prepareStatement(query);
-        	stmt.setString(1, submission); 
-        	stmt.setString(2, editedArticle); 
-        	stmt.setString(3, chiefEditor); 
+            stmt.setInt(1, journalISSN);
+        	stmt.setString(2, submission); 
+        	stmt.setString(3, editedArticle); 
         	stmt.setString(4, editor); 
         	stmt.setString(5, newPassword); 
         		
@@ -451,15 +451,15 @@ public class Database {
         try {
        	    openConnection();
        	    ResultSet res = stmt.executeQuery("SELECT * FROM Editors");
-       	    System.out.println("Submission \t EditedArticle \t ChiefEditor \t Editor \t NewPassword");
+       	    System.out.println("JournalISSN \t Submission \t EditedArticle \t Editor \t NewPassword");
        	    while (res.next()) {
+       	    	int journalISSN = res.getInt("journalISSN");
        	        String submission = res.getString("submission");
        		    String editedArticle = res.getString("editedArticle");
-       		    String chiefEditor = res.getString("chiefEditor");
        		    String editor = res.getString("editor");
        		    String newPassword = res.getString("newPassword");
   
-       		    System.out.println(submission +"\t"+ editedArticle +"\t"+ chiefEditor +"\t"+ editor +"\t"+ newPassword);
+       		    System.out.println(journalISSN +"\t"+ submission +"\t"+ editedArticle +"\t"+ editor +"\t"+ newPassword);
        	}
        	res.close();
        	}catch (SQLException ex) {
@@ -475,40 +475,41 @@ public class Database {
        	    openConnection();
        	    ResultSet res = stmt.executeQuery("SELECT "+col+" FROM Editors WHERE "+col1+" = '"+value+"'");
        	    switch(col) {
+       	        case("journalISSN"): System.out.println("JournalISSN");
+			                         while (res.next()) {
+			                             int journalISSN = res.getInt("journalISSN");
+			                             System.out.println(journalISSN);}
+			                         break;
        	        case("submission"): System.out.println("Submission");
-       	       				   while (res.next()) {
-       	       				       String submission = res.getString("submission");
-       	       				       System.out.println(submission);}
-       	       				   break;
-       	        case("editedArticle"): System.out.println("EditedArticle");
-     						      while (res.next()) {
-     						          String editedArticle = res.getString("editedArticle");
-	       				              System.out.println(editedArticle);}
-     						      break;
-       	        case("chiefEditor"): System.out.println("ChiefEditor");
-       	                         while (res.next()) {
-			                         String chiefEditor = res.getString("chiefEditor");
-		                             System.out.println(chiefEditor);}	
-       	                         break;
-       	        case("editor"): System.out.println("Editor");
        	       				        while (res.next()) {
-                                        String editor = res.getString("editor");
-                                        System.out.println(editor);}	
-                                    break;
+       	       				            String submission = res.getString("submission");
+       	       				            System.out.println(submission);}
+       	       				        break;
+       	        case("editedArticle"): System.out.println("EditedArticle");
+     						           while (res.next()) {
+     						               String editedArticle = res.getString("editedArticle");
+	       				                   System.out.println(editedArticle);}
+     						           break;
+       	        case("editor"): System.out.println("Editor");
+       	       				    while (res.next()) {
+                                    String editor = res.getString("editor");
+                                    System.out.println(editor);}	
+                                break;
        	        case("newPassword"): System.out.println("NewPassword");
-                           while (res.next()) {
-                               String newPassword = res.getString("newPassword");
-                               System.out.println(newPassword);}
-                           break;
-       	        case("*"): System.out.println("Submission \t EditedArticle \t ChiefEditor \t Editor \t NewPassword");
+                                     while (res.next()) {
+                                         String newPassword = res.getString("newPassword");
+                                         System.out.println(newPassword);}
+                                     break;
+       	        case("*"): System.out.println("JournalISSN \t Submission \t EditedArticle \t Editor \t NewPassword");
        	        		   while (res.next()) {
+       	        			   int journalISSN = res.getInt("journalISSN");
         	                   String submission = res.getString("submission");
         		               String editedArticle = res.getString("editedArticle");
         		               String chiefEditor = res.getString("chiefEditor");
         		               String editor = res.getString("editor");
         		               String newPassword = res.getString("newPassword");
    
-        		               System.out.println(submission +"\t"+ editedArticle +"\t"+ chiefEditor +"\t"+ editor +"\t"+ newPassword);}
+        		               System.out.println(journalISSN +"\t"+ submission +"\t"+ editedArticle +"\t"+ editor +"\t"+ newPassword);}
        	                   break;
         		
                 default: System.out.println("Wrong command");               
@@ -528,15 +529,16 @@ public class Database {
     String volume;
     String edition;
     int pageNum;
-
+    String chiefEditor;
 
     // constructor
-    public void Journal(String titlej, int journalISSN, String volume, String edition, int pageNum) {
+    public void Journal(String titlej, int journalISSN, String volume, String edition, int pageNum, String chiefEditor) {
     	this.titlej = titlej;
         this.journalISSN = journalISSN;
         this.volume = volume;
         this.edition = edition;
         this.pageNum = pageNum;
+        this.chiefEditor = chiefEditor;
     }
 
     public static void initialiseJournalTable() throws ClassNotFoundException, SQLException{
@@ -544,12 +546,13 @@ public class Database {
     	    openConnection();
 
             String sql = "CREATE TABLE Journal (" +
-            	"Title VARCHAR (50)," +
-        		"JournalISSN INT (50)," +
-        		"Volume VARCHAR (50)," +
-	    		"Edition VARCHAR (50)," +
-	    		"PageNum INT (50)," +
-	    		"PRIMARY KEY (JournalISSN))"; 
+            	"Title VARCHAR (30), " +
+        		"JournalISSN INT (50), " +
+        		"Volume VARCHAR (10), " +
+	    		"Edition VARCHAR (20), " +
+	    		"PageNum INT (50), " +
+	    		"ChiefEditor VARCHAR (20), " +
+	    		"PRIMARY KEY (JournalISSN))";
         
             //Creates the table in the database
             stmt.executeUpdate(sql);
@@ -565,19 +568,20 @@ public class Database {
     }
 
     // insert and select function
-    public static void insertJournalData(String titlej, int journalISSN, String volume, String edition, int pageNum) throws ClassNotFoundException, SQLException {
+    public static void insertJournalData(String titlej, int journalISSN, String volume, String edition, int pageNum, String chiefEditor) throws ClassNotFoundException, SQLException {
 	    try {
 		    openConnection();
 		
 		    //creating the query that will be inserted into the database
-		    String query = " insert into Journal (title, journalISSN, volume, edition, pageNum)"
+		    String query = " insert into Journal (title, journalISSN, volume, edition, pageNum, chiefEditor)"
 				+ " values (?,?,?,?,?)"; 
 		    PreparedStatement stmt = conn.prepareStatement(query);
 		    stmt.setString(1, titlej);
 		    stmt.setInt(2, journalISSN); 
 		    stmt.setString(3, volume); 
 		    stmt.setString(4, edition); 
-		    stmt.setInt(5, pageNum); 
+		    stmt.setInt(5, pageNum);
+		    stmt.setString(6, chiefEditor); 
 		
 		    //execute the query and push the data into the submission table
 		    stmt.execute(); 
@@ -596,15 +600,16 @@ public class Database {
         try {
    	        openConnection();
    	        ResultSet res = stmt.executeQuery("SELECT * FROM Journal");
-   	        System.out.println("Title \t JournalISSN \t Volume \t  Edition \t PageNum");
+   	        System.out.println("Title \t JournalISSN \t Volume \t  Edition \t PageNum \t ChiefEditor ");
    	        while (res.next()) {
    	        	String title = res.getString("title");
    		        int journalISSN = res.getInt("journalISSN");
    		        String volume = res.getString("volume");
    		        String edition = res.getString("edition");
    		        int pageNum = res.getInt("pageNum");
+   		        String chiefEditor = res.getString("chiefEditor");
    		 
-   		        System.out.println(title +" \t "+ journalISSN +" \t "+ volume +" \t "+ edition +" \t "+ pageNum);
+   		        System.out.println(title +"\t"+ journalISSN +"\t"+ volume +"\t"+ edition +"\t"+ pageNum +"\t"+ chiefEditor);
             }
    	    res.close();
    	    }
@@ -646,14 +651,21 @@ public class Database {
                                      int pageNum = res.getInt("pageNum");
                                      System.out.println(pageNum);}	
                                  break;
-       	        case("*"): System.out.println("JournalISSN \t Volume \t Edition \t PageNum");
+       	        case("chiefEditor"): System.out.println("ChiefEditor");
+                                     while (res.next()) {
+                                         String chiefEditor = res.getString("chiefEditor");
+                                         System.out.println(chiefEditor);}	
+                                     break;
+       	        case("*"): System.out.println("Title \t JournalISSN \t Volume \t Edition \t PageNum \t ChiefEditor");
                            while (res.next()) {
+                        	   String title = res.getString("title");
                         	   int journalISSN = res.getInt("journalISSN");
                         	   String volume = res.getString("volume");
                         	   String edition = res.getString("edition");
                         	   int pageNum = res.getInt("pageNum");
+                        	   String chiefEditor = res.getString("chiefEditor");
 	 
-	                       System.out.println(journalISSN +"\t"+ volume +"\t"+ edition +"\t"+ pageNum);}
+	                       System.out.println(title +"\t"+ journalISSN +"\t"+ volume +"\t"+ edition +"\t"+ pageNum +"\t"+ chiefEditor);}
                            break;
                 default: System.out.println("Wrong command");               
        	}
@@ -689,12 +701,12 @@ public class Database {
 			openConnection();
 			
 			String sql = "CREATE TABLE Review (" +
-        		"Reviewer VARCHAR (150), " +
-        		"AnonymousID INT (50), " +
-        		"InitialVerdict VARCHAR (150), " +
-	    		"Critisisms VARCHAR (150), " +
-	    		"Response VARCHAR (150), " + 
-	    		"FinalVerdict VARCHAR (150), " +
+        		"Reviewer VARCHAR (20), " +
+        		"AnonymousID INT (10), " +
+        		"InitialVerdict VARCHAR (15), " +
+	    		"Critisisms VARCHAR (100), " +
+	    		"Response VARCHAR (100), " + 
+	    		"FinalVerdict VARCHAR (15), " +
 	    		"PRIMARY KEY (AnonymousID))";
         
 			//Creates the table in the database
@@ -743,7 +755,7 @@ public class Database {
         try {
    	        openConnection();
    	        ResultSet res = stmt.executeQuery("SELECT * FROM Review");
-   	        System.out.println("Reviewer \t  AnonymousID \t InitialVerdict \t Critisisms \t Response \t FinalVerdict");
+   	        System.out.println("Reviewer \t AnonymousID \t InitialVerdict \t Critisisms \t Response \t FinalVerdict");
    	        while (res.next()) {
    		        String reviewer = res.getString("reviewer");
    		        int anonymousID = res.getInt("anonymousID");
@@ -826,6 +838,7 @@ public class Database {
         Pending, Accepted, Rejected
     }
 
+    int journalISSNs;
     int submissionID; 
     String titles; 
     String abstractss; 
@@ -838,21 +851,20 @@ public class Database {
     String review3;
     String perm;
     boolean finalDecision;
-    int journalISSNs;
     
-    public void Submission(String titles, String abstractss, String file1, String mainAuthors, String authorss, String status, String review1, String review2, String review3, String perm, boolean finalDecision, int journalISSNs){
-        this.title = titles; 
-        this.abstracts = abstractss; 
+    public void Submission(int journalISSNs, String titles, String abstractss, String file1, String mainAuthors, String authorss, String status, String review1, String review2, String review3, String perm, boolean finalDecision){
+    	this.journalISSNs = journalISSNs;
+    	this.titles = titles; 
+        this.abstractss = abstractss; 
         this.file1 = file1; 
-        this.mainAuthor = mainAuthors; 
-        this.authors = authorss; 
+        this.mainAuthors = mainAuthors; 
+        this.authorss = authorss; 
         this.status = status;
         this.review1 = review1;
         this.review2 = review2;
         this.review3 = review3;
         this.perm = perm;
-        this.finalDecision = finalDecision;
-        this.journalISSNs = journalISSNs;
+        this.finalDecision = finalDecision;    
     }
     
     public static void initialiseSubmissionTable() throws ClassNotFoundException, SQLException{
@@ -860,23 +872,23 @@ public class Database {
         	openConnection();
 
             String sql = "CREATE TABLE Submission (" +
-            		"SubmissionID INT(30) not NULL AUTO_INCREMENT, " +
-            		"SubmissionTitle VARCHAR(40), " + 
-            		"SubmissionAbstract VARCHAR(500), " + 
-            		"SubmissionLink VARCHAR(20), " + 
-            		"MainAuthor VARCHAR(50), "+
-            		"Authors VARCHAR(100), " +
-            		"Status VARCHAR(50), " +
-            		"Review1 VARCHAR(100), " +
-            		"Review2 VARCHAR(100), " +
-            		"Review3 VARCHAR(100), " +
-            		"Perm VARCHAR(10), " +
+            		"JournalISSN INT (20), " +
+            		"SubmissionID INT (30) not NULL AUTO_INCREMENT, " +
+            		"SubmissionTitle VARCHAR (40), " + 
+            		"SubmissionAbstract VARCHAR (250), " + 
+            		"SubmissionLink VARCHAR (20), " + 
+            		"MainAuthor VARCHAR (20), "+
+            		"Authors VARCHAR (20), " +
+            		"Status VARCHAR (10), " +
+            		"Review1 VARCHAR (100), " +
+            		"Review2 VARCHAR (100), " +
+            		"Review3 VARCHAR (100), " +
+            		"Perm VARCHAR (10), " +
         		    "FinalDecision boolean, " +
-        		    "JournalISSN INT(20), " +
-            		"PRIMARY KEY (SubmissionID), " +
-                    "FOREIGN KEY (JournalISSN) REFERENCES Journal (JournalISSN) " +
-                    "ON UPDATE CASCADE ON DELETE RESTRICT) ENGINE=INNODB";
-            
+            		"PRIMARY KEY (SubmissionID))";
+     //               "FOREIGN KEY (JournalISSN) REFERENCES Journal (JournalISSN) " +
+      //              "ON DELETE RESTRICT) ENGINE=INNODB";
+      //      ON UPDATE SET NULL 
             //Creates the table in the database
             stmt.executeUpdate(sql);
             
@@ -890,26 +902,27 @@ public class Database {
     }
     
     // insert and select functions
-    public static void insertSubmissionData(String submissionTitle, String submissionAbstract,String submissionLink, String mainAuthors, String authorss, String status, String review1, String review2, String review3, String perm, boolean finalDecision, int journalISSN) throws ClassNotFoundException, SQLException {
+    public static void insertSubmissionData( int journalISSN, String submissionTitle, String submissionAbstract,String submissionLink, String mainAuthors, String authorss, String status, String review1, String review2, String review3, String perm, boolean finalDecision) throws ClassNotFoundException, SQLException {
     	try {
     		openConnection();
 
     		//creating the query that will be inserted into the database
-    		String query = " insert into Submission (submissionTitle, submissionAbstract, submissionLink, mainAuthor, authors, status, review1, review2, review3, perm, finalDecision, journalISSN)"
+    		String query = " insert into Submission (journalISSN, submissionTitle, submissionAbstract, submissionLink, mainAuthor, authors, status, review1, review2, review3, perm, finalDecision)"
     				+ " values (?,?,?,?,?,?,?,?,?,?,?,?)"; 
-    		PreparedStatement stmt = conn.prepareStatement(query); 
-    		stmt.setString(1, submissionTitle ); 
-    		stmt.setString(2, submissionAbstract); 
-    		stmt.setString(3, submissionLink); 
-    		stmt.setString(4, mainAuthors);
-    		stmt.setString(5, authorss);
-    		stmt.setString(6, status); 
-    		stmt.setString(7, review1);
-    		stmt.setString(8, review2);
-    		stmt.setString(9, review3);
-    		stmt.setString(10, perm); 
-        	stmt.setBoolean(11, finalDecision);
-        	stmt.setInt(12, journalISSN);
+    		PreparedStatement stmt = conn.prepareStatement(query);
+    		stmt.setInt(1, journalISSN);
+    		stmt.setString(2, submissionTitle ); 
+    		stmt.setString(3, submissionAbstract); 
+    		stmt.setString(4, submissionLink); 
+    		stmt.setString(5, mainAuthors);
+    		stmt.setString(6, authorss);
+    		stmt.setString(7, status); 
+    		stmt.setString(8, review1);
+    		stmt.setString(9, review2);
+    		stmt.setString(10, review3);
+    		stmt.setString(11, perm); 
+        	stmt.setBoolean(12, finalDecision);
+        	
     		
     		//execute the query and push the data into the submission table
     		stmt.execute(); 
@@ -928,9 +941,10 @@ public class Database {
         try {
    	        openConnection();
    	        ResultSet res = stmt.executeQuery("SELECT * FROM Submission");
-   	        System.out.println("SubmissionID \t SubmissionTitle \t SubmissionAbstract \t SubmissionLink \t MainAuthor \t Authors"
-   	        		+ "\t Status \t Review1 \t Review2 \t Review3 \t Perm \t FinalDecision \t JournalISSN");
+   	        System.out.println("JournalISSN \t SubmissionID \t SubmissionTitle \t SubmissionAbstract \t SubmissionLink \t MainAuthor \t Authors"
+   	        		+ "\t Status \t Review1 \t Review2 \t Review3 \t Perm \t FinalDecision ");
    	        while (res.next()) {
+   	        	int journalISSN = res.getInt("journalISSN");
    		        int submissionID = res.getInt("submissionID");
    		        String submissionTitle = res.getString("submissionTitle");
    		        String submissionAbstract = res.getString("submissionAbstract");
@@ -943,10 +957,12 @@ public class Database {
    		        String review3 = res.getString("review3");
    		        String perm = res.getString("perm");
     		    boolean finalDecision = res.getBoolean("finalDecision");
-    		    int journalISSN = res.getInt("journalISSN");
-   		 
-   		        System.out.println(submissionID +"\t"+ submissionTitle +"\t"+ submissionAbstract +"\t"+ submissionLink +"\t"+ mainAuthor +"\t"+ 
-   		        		authors+"\t"+ status+"\t"+ review1 +"\t"+ review2 + "\t"+ review3 +"\t"+ perm +"\t"+ finalDecision +"\t"+ journalISSN);
+    		    
+   		       
+    		    DBTablePrinter.printTable(conn,"Submission");
+    	        
+   		//        System.out.println(journalISSN +"\t"+ submissionID +"\t"+ submissionTitle +"\t"+ submissionAbstract +"\t"+ submissionLink +"\t"+ mainAuthor +"\t"+ 
+   		//        		authors+"\t"+ status +"\t"+ review1 +"\t"+ review2 + "\t"+ review3 +"\t"+ perm +"\t"+ finalDecision);
             }
    	    res.close();
    	    }
@@ -957,12 +973,17 @@ public class Database {
    	       if (stmt != null) stmt.close();
    	    }
     }
-    
-    public static void printSubmission(String col, String col1, String value) throws ClassNotFoundException, SQLException {
+
+	public static void printSubmission(String col, String col1, String value) throws ClassNotFoundException, SQLException {
     	try {
        	    openConnection();
        	    ResultSet res = stmt.executeQuery("SELECT "+col+" FROM Submission WHERE "+col1+" = '"+value+"'");
        	    switch(col) {
+       	        case("journalISSN"): System.out.println("JournalISSN");
+                                     while (res.next()) {
+                                         int journalISSN = res.getInt("journalISSN");
+                                         System.out.println(journalISSN);}	
+                                     break;
        	        case("submissionID"): System.out.println("SubmissionID");
        	       				      	  while (res.next()) {
        	       				      		  int submissionID = res.getInt("submissionID");
@@ -1023,14 +1044,10 @@ public class Database {
                                            boolean finalDecision = res.getBoolean("finalDecision");
                                            System.out.println(finalDecision);}	
                                        break;
-                case("journalISSN"): System.out.println("JournalISSN");
-                                     while (res.next()) {
-                                         int journalISSN = res.getInt("journalISSN");
-                                         System.out.println(journalISSN);}	
-                                     break;
-       	        case("*"): System.out.println("SubmissionID  SubmissionTitle \t SubmissionAbstract \t SubmissionLink \t MainAuthor \t "
-       	        		+ "Authors \t Status \t Review1 \t Review2 \t Review3 \t Perm \t FinalDecision \t JournalISSN");
+       	        case("*"): System.out.println("JournalISSN \t SubmissionID  SubmissionTitle \t SubmissionAbstract \t SubmissionLink \t MainAuthor \t "
+       	        		   + "Authors \t Status \t Review1 \t Review2 \t Review3 \t Perm \t FinalDecision");
        	        		   while (res.next()) {
+       	        			   int journalISSN = res.getInt("journalISSN");
        	        			   int submissionID = res.getInt("submissionID");
        	        			   String submissionTitle = res.getString("submissionTitle");
        	        			   String submissionAbstract = res.getString("submissionAbstract");
@@ -1043,10 +1060,9 @@ public class Database {
        	        			   String review3 = res.getString("review3");
        	        			   String perm = res.getString("perm");
        	     		           boolean finalDecision = res.getBoolean("finalDecision");
-       	     		           int journalISSN = res.getInt("journalISSN");
-    		               
-       	        		   System.out.println(submissionID +"\t"+ submissionTitle +"\t"+ submissionAbstract +"\t"+ submissionLink +"\t"+ mainAuthor +"\t"+ 
-       	    		        		authors+"\t"+ status+"\t"+ review1 +"\t"+ review2 + "\t"+ review3 +"\t"+ perm +"\t"+ finalDecision +"\t"+ journalISSN);}
+       	     		            
+       	        		   System.out.println(journalISSN +"\t"+ submissionID +"\t"+ submissionTitle +"\t"+ submissionAbstract +"\t"+ submissionLink
+       	        		       +"\t"+ mainAuthor +"\t"+ authors+"\t"+ status+"\t"+ review1 +"\t"+ review2 + "\t"+ review3 +"\t"+ perm +"\t"+ finalDecision);}
        	        		   break;
                 default: System.out.println("Wrong command");               
        	}
@@ -1070,8 +1086,8 @@ public class Database {
     boolean isEditor;
     boolean isAuthor;
 	
-    public void Usertable (String title, String forename, String surname, String university, String loginID, int password, boolean isReviewer, boolean isEditor, boolean isAuthor) {
-        this.title = titleu;
+    public void Usertable (String titleu, String forename, String surname, String university, String loginID, int password, boolean isReviewer, boolean isEditor, boolean isAuthor) {
+        this.titleu = titleu;
         this.forename = forename;
         this.surname = surname;
     	this.university = university;
@@ -1092,7 +1108,7 @@ public class Database {
             		"Surname VARCHAR (20)," +
             		"University VARCHAR (50)," +
             		"LoginID VARCHAR (30)," +
-            		"Password INT (50)," +
+            		"Password INT (20)," +
             		"IsReviewer boolean," +
             		"IsEditor boolean," +
             		"IsAuthor boolean," +
@@ -1147,7 +1163,7 @@ public class Database {
         try {
        	    openConnection();
        	    ResultSet res = stmt.executeQuery("SELECT * FROM User");
-       	    System.out.println("Title  Forename \t Surname \t University \t LoginID \t Password \t IsReviewer \t IsEditor \t IsAuthor");
+       	    System.out.println("Title Forename \t Surname \t University \t LoginID \t Password \t IsReviewer \t IsEditor \t IsAuthor");
        	    while (res.next()) {
        	        String title = res.getString("title");
        		    String forename = res.getString("forename");
@@ -1159,8 +1175,8 @@ public class Database {
        		    boolean isEditor = res.getBoolean("isEditor");
        		    boolean isAuthor = res.getBoolean("isAuthor");
        		 
-       		    System.out.println(title +"\t"+ forename +"\t"+ surname +"\t"+ university +"\t"+ loginID +"\t" + password +"\t"
-       			    + isReviewer +"\t"+ isEditor +"\t"+isAuthor);
+       		    System.out.println(title +"\t"+ forename +"\t"+ surname +"\t"+ university +"\t"+ loginID +"\t" + password +"\t"+ isReviewer +"\t"
+       		        + isEditor +"\t"+ isAuthor);
        	    }
        	    res.close();
        	}catch (SQLException ex) {
@@ -1221,7 +1237,7 @@ public class Database {
                                       boolean isAuthor = res.getBoolean("isAuthor");
                                       System.out.println(isAuthor);}	
                                   break;
-       	        case("*"): System.out.println("Title  Forename \t Surname \t University \t LoginID \t Password \t IsReviewer \t IsEditor \t IsAuthor");
+       	        case("*"): System.out.println("Title Forename \t Surname \t University \t LoginID \t Password \t IsReviewer \t IsEditor \t IsAuthor");
        	                   while (res.next()) {
         	                   String title = res.getString("title");
         		               String forename = res.getString("forename");
@@ -1234,7 +1250,7 @@ public class Database {
         		               boolean isAuthor = res.getBoolean("isAuthor");
         		 
         		               System.out.println(title +"\t"+ forename +"\t"+ surname +"\t"+ university +"\t"+ loginID +"\t" + password +"\t"
-        		          			    + isReviewer +"\t"+ isEditor +"\t"+isAuthor);}
+        		          		   + isReviewer +"\t"+ isEditor +"\t"+isAuthor);}
        	                   break;
         		
                 default: System.out.println("Wrong command");               
@@ -1249,18 +1265,18 @@ public class Database {
     }
     
     public static void main(String[] args) throws ClassNotFoundException, SQLException{
- //   	Create all tables
- //   	initialiseArticleTable();
- //   	insertArticleData(12, "hi", "abstracts", "www", "Kim", "ga");
- //   	initialiseEditorsTable();
- //   	initialiseJournalTable();
- //   	initialiseReviewTable();
- //   	initialiseSubmissionTable();
- //   	initialiseUsertable(); */
- //   	initialiseCoAuthorsTable();
-  //  	insertJournalData("as", 4, "First", "First", 120);
- //   	insertCoAuthorsData("ha", 6, "asd@sheffield.ac.uk");
-   // 	insertArticleData(4, "Ba", "abstracts", "ww1", "Tom", "Bub");
-   // 	insertSubmissionData("Hi", "Abstract", "www", "Jim", "Cup", "Pending", "Good", "Bad", "Nah", "Allow", true, 4);
+    //  Create all tables
+ //       initialiseSubmissionTable();
+ //       initialiseArticleTable();
+ //       initialiseEditorsTable();
+ //       initialiseJournalTable();                        
+ //       initialiseReviewTable();                       
+ //       initialiseUsertable(); */
+ //       initialiseCoAuthorsTable();
+ //       insertJournalData("as", 1, "First", "First", 120);
+ //       insertArticleData(1, "Ba", "abstracts", "ww1", "Tom", "Bub");
+ //       insertSubmissionData("Hi", "Abstract", "www", "Jim", "Cup", "Pending", "Good", "Bad", "Nah", "Allow", true, 2);
+ //       printAllSubmission();
+ //       insertCoAuthorsData("hasda", 1, "asd@sheffield.ac.uk");
     }
 }
