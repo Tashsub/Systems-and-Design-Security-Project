@@ -96,6 +96,7 @@ public class AuthorPage extends JFrame {
 		layeredPane.add(panelMainAuthor, "name_113590637770100");
 		panelMainAuthor.setLayout(null);
 		
+		//btnPassRole
 		JButton btnPassRole = new JButton("Pass Role as Main Author");
 		btnPassRole.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnPassRole.setBounds(24, 51, 263, 29);
@@ -131,6 +132,7 @@ public class AuthorPage extends JFrame {
 		txtResponse.setBounds(546, 14, 781, 66);
 		panelMainAuthor.add(txtResponse);
 		
+		//btnResponse
 		JButton btnResponse = new JButton("Respond");
 		btnResponse.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		btnResponse.setBounds(1339, 13, 107, 25);
@@ -140,6 +142,7 @@ public class AuthorPage extends JFrame {
 		layeredPane.add(panelAuthor, "name_113603667248100");
 		panelAuthor.setLayout(null);
 		
+		//btnRetire
 		JButton btnRetire = new JButton("Retire");
 		btnRetire.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnRetire.setBounds(38, 0, 105, 43);
@@ -175,6 +178,18 @@ public class AuthorPage extends JFrame {
 		radioMainAuthor.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		radioMainAuthor.setBounds(261, 51, 142, 33);
 		getContentPane().add(radioMainAuthor);
+		
+		//btnchangePass
+		JButton btnChangePass = new JButton("Change Password");
+		btnChangePass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChangePasswordPage c = new ChangePasswordPage();
+				c.setVisible(true);
+			}
+		});
+		btnChangePass.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnChangePass.setBounds(915, 50, 146, 38);
+		getContentPane().add(btnChangePass);
 		
 	}
 	

@@ -114,9 +114,9 @@ public class EditorPage extends JFrame {
 		labelEmail.setBounds(12, 13, 60, 22);
 		panelChiefEditor.add(labelEmail);
 		
-		JLabel lblFinalDes = new JLabel("Final Decision :");
+		JLabel lblFinalDes = new JLabel("Publish :");
 		lblFinalDes.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblFinalDes.setBounds(363, 0, 154, 40);
+		lblFinalDes.setBounds(425, 5, 93, 29);
 		panelChiefEditor.add(lblFinalDes);
 		
 		txtArticleID = new JTextField();
@@ -190,6 +190,17 @@ public class EditorPage extends JFrame {
 		radioEditor.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		radioEditor.setBounds(393, 26, 98, 33);
 		contentPane.add(radioEditor);
+		
+		JButton btnChangePass = new JButton("Change Password");
+		btnChangePass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChangePasswordPage c = new ChangePasswordPage();
+				c.setVisible(true);
+			}
+		});
+		btnChangePass.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnChangePass.setBounds(889, 22, 146, 41);
+		contentPane.add(btnChangePass);
 	}
 
 }
