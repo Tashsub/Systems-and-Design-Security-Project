@@ -259,12 +259,12 @@ public class Database {
        	}
     }
     
-    // Create ArticleCoAuthor table
+    // Create CoAuthors table
     String author;
     int submissionId;
     String authorId;
 	
-    public void ArticleCoAuthors (String author, int submissionId, String authorId) {
+    public void CoAuthors (String author, int submissionId, String authorId) {
     	this.author = author;
     	this.submissionId = submissionId;
         this.authorId = authorId;
@@ -276,7 +276,7 @@ public class Database {
 
             String sql = "CREATE TABLE CoAuthors (" +
             		"Author VARCHAR (20), " +
-            		"SubmissionID INT (20), " +
+            		"SubmissionID INT (50), " +
 		    		"AuthorId VARCHAR (30), " +
 		    		"PRIMARY KEY (SubmissionID), " +
                     "FOREIGN KEY (SubmissionID) REFERENCES Submission (SubmissionID) " +
@@ -378,38 +378,27 @@ public class Database {
        	    if (stmt != null) stmt.close();
        	}
     }
-
-    //Create Editors table
-    int journalISSNe;
-    String submission;
-    String editedArticle;
-    String editor;
-    String newPassword;
-    	
-    public void Editors (int journalISSNe, String submission, String editedArticle, String editor, String newPassword) {
-        this.journalISSNe = journalISSNe;
-    	this.submission = submission;
-        this.editedArticle = editedArticle;
-        this.editor = editor;
-        this.newPassword = newPassword;
+    
+ // Create CoEditors table
+    int journalISSNce;
+    String editorc;
+	
+    public void CoEditors (int journalISSNce, String editorc) {
+    	this.journalISSNce = journalISSNce;
+        this.editorc = editorc;
     }
- 
-     public static void initialiseEditorsTable() throws ClassNotFoundException, SQLException{
+    
+    public static void initialiseCoEditorsTable() throws ClassNotFoundException, SQLException{
         try{
             openConnection();
-            	
-            String sql = "CREATE TABLE Editors (" +
-            	"JournalISSN INT (50), " +
-                "Submission VARCHAR (100), " +
-                "EditedArticle VARCHAR (100), " +
-    		    "Editor VARCHAR (40), "+
-    		    "NewPassword VARCHAR (20))";
-                
-                //Creates the table in the database
-                stmt.executeUpdate(sql);
-                
-                System.out.println("Created table in given database...");
-                
+
+            String sql = "CREATE TABLE CoEditors (" +
+            		"JournalISSN INT (50), " +
+		    		"Editor VARCHAR (30))";
+            
+            //Creates the table in the database
+            stmt.executeUpdate(sql);
+            System.out.println("Created table in given database...");   
         }
         catch (SQLException ex) {
             ex.printStackTrace();
@@ -418,48 +407,41 @@ public class Database {
             if (conn != null) conn.close();
         }
     }
-        
+    
     // insert and select functions
-    public static void insertEditorsData(int journalISSN, String submission, String editedArticle, String editor, String newPassword) throws ClassNotFoundException, SQLException {
-        try {
-            openConnection();
-        		
-            //creating the query that will be inserted into the database
-        	String query = " insert into Editors (journalISSN, submission, editedArticle, editor, newPassword)"
-        		+ " values (?,?,?,?,?)"; 
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setInt(1, journalISSN);
-        	stmt.setString(2, submission); 
-        	stmt.setString(3, editedArticle); 
-        	stmt.setString(4, editor); 
-        	stmt.setString(5, newPassword); 
-        		
-        	//execute the query and push the data into the submission table
-        	stmt.execute(); 
-        	conn.close(); 
-        		
-        }catch (Exception e) {
-        	System.out.println("Got an exception!"); 
-        	System.out.println(e.getMessage()); 
-        }
+    public static void insertCoEditorsData(int journalISSN, String editor) throws ClassNotFoundException, SQLException {
+    	try {
+    		openConnection();
+    		
+    		//creating the query that will be inserted into the database
+    		String query = " insert into CoEditors (journalISSN, editor) values (?,?)"; 
+    		PreparedStatement stmt = conn.prepareStatement(query); 
+    		stmt.setInt(1, journalISSN); 
+    		stmt.setString(2, editor);
+    		
+    		//execute the query and push the data into the ArticleCoAuthor table
+    		stmt.execute(); 
+    		conn.close(); 
+    		
+    	}catch (Exception e) {
+    		System.out.println("Got an exception!"); 
+    		System.out.println(e.getMessage()); 
+    	}
         finally {
             if (conn != null) conn.close();
         }	
     }
-        
-    public static void printAllEditors() throws ClassNotFoundException, SQLException {
+
+    public static void printAllCoEditors() throws ClassNotFoundException, SQLException {
         try {
-       	    openConnection();
-       	    ResultSet res = stmt.executeQuery("SELECT * FROM Editors");
-       	    System.out.println("JournalISSN \t Submission \t EditedArticle \t Editor \t NewPassword");
-       	    while (res.next()) {
-       	    	int journalISSN = res.getInt("journalISSN");
-       	        String submission = res.getString("submission");
-       		    String editedArticle = res.getString("editedArticle");
+        	openConnection();
+    	    ResultSet res = stmt.executeQuery("SELECT * FROM CoEditors");
+    	    System.out.println("JournalISSN \t Editor");
+    	    while (res.next()) {
+    	    	int journalISSN = res.getInt("journalISSN");     
        		    String editor = res.getString("editor");
-       		    String newPassword = res.getString("newPassword");
-  
-       		    System.out.println(journalISSN +"\t"+ submission +"\t"+ editedArticle +"\t"+ editor +"\t"+ newPassword);
+    		    		    
+    		    System.out.println(journalISSN +"\t"+ editor);  
        	}
        	res.close();
        	}catch (SQLException ex) {
@@ -470,48 +452,28 @@ public class Database {
        	}
     }
     
-    public static void printEditors(String col, String col1, String value) throws ClassNotFoundException, SQLException {
+    public static void printCoEditors(String col, String col1, String value) throws ClassNotFoundException, SQLException {
     	try {
        	    openConnection();
-       	    ResultSet res = stmt.executeQuery("SELECT "+col+" FROM Editors WHERE "+col1+" = '"+value+"'");
+       	    ResultSet res = stmt.executeQuery("SELECT "+col+" FROM CoEditors WHERE "+col1+" = '"+value+"'");
        	    switch(col) {
        	        case("journalISSN"): System.out.println("JournalISSN");
-			                         while (res.next()) {
-			                             int journalISSN = res.getInt("journalISSN");
-			                             System.out.println(journalISSN);}
-			                         break;
-       	        case("submission"): System.out.println("Submission");
-       	       				        while (res.next()) {
-       	       				            String submission = res.getString("submission");
-       	       				            System.out.println(submission);}
-       	       				        break;
-       	        case("editedArticle"): System.out.println("EditedArticle");
-     						           while (res.next()) {
-     						               String editedArticle = res.getString("editedArticle");
-	       				                   System.out.println(editedArticle);}
-     						           break;
-       	        case("editor"): System.out.println("Editor");
-       	       				    while (res.next()) {
+                                     while (res.next()) {
+                                         int journalISSN = res.getInt("journalISSN");
+                                         System.out.println(journalISSN);}
+                                     break;
+                case("editor"): System.out.println("Editor");
+		                        while (res.next()) {
                                     String editor = res.getString("editor");
                                     System.out.println(editor);}	
                                 break;
-       	        case("newPassword"): System.out.println("NewPassword");
-                                     while (res.next()) {
-                                         String newPassword = res.getString("newPassword");
-                                         System.out.println(newPassword);}
-                                     break;
-       	        case("*"): System.out.println("JournalISSN \t Submission \t EditedArticle \t Editor \t NewPassword");
-       	        		   while (res.next()) {
-       	        			   int journalISSN = res.getInt("journalISSN");
-        	                   String submission = res.getString("submission");
-        		               String editedArticle = res.getString("editedArticle");
-        		               String chiefEditor = res.getString("chiefEditor");
-        		               String editor = res.getString("editor");
-        		               String newPassword = res.getString("newPassword");
-   
-        		               System.out.println(journalISSN +"\t"+ submission +"\t"+ editedArticle +"\t"+ editor +"\t"+ newPassword);}
-       	                   break;
-        		
+       	        case("*"): System.out.println("JournalISSN \t Editor");
+                           while (res.next()) {
+                        	   int journalISSN = res.getInt("journalISSN");     
+                      		   String editor = res.getString("editor");
+                   		    		    
+                   		       System.out.println(journalISSN +"\t"+ editor);}
+                           break;
                 default: System.out.println("Wrong command");               
        	}
        	res.close();
@@ -885,10 +847,10 @@ public class Database {
             		"Review3 VARCHAR (100), " +
             		"Perm VARCHAR (10), " +
         		    "FinalDecision boolean, " +
-            		"PRIMARY KEY (SubmissionID))";
-     //               "FOREIGN KEY (JournalISSN) REFERENCES Journal (JournalISSN) " +
-      //              "ON DELETE RESTRICT) ENGINE=INNODB";
-      //      ON UPDATE SET NULL 
+            		"PRIMARY KEY (SubmissionID), " +
+                    "FOREIGN KEY (JournalISSN) REFERENCES Journal (JournalISSN) " +
+                    "ON UPDATE SET NULL ON DELETE RESTRICT) ENGINE=INNODB";
+      //       
             //Creates the table in the database
             stmt.executeUpdate(sql);
             
@@ -936,7 +898,15 @@ public class Database {
           if (conn != null) conn.close();
         }
     }
-
+    String justifyFlag = "";
+    
+    public String getJustifyFlag() {
+        return justifyFlag;
+    }
+    public void justifyLeft() {
+        this.justifyFlag = "-";
+    }
+    
     public static void printAllSubmission() throws ClassNotFoundException, SQLException {
         try {
    	        openConnection();
@@ -957,8 +927,7 @@ public class Database {
    		        String review3 = res.getString("review3");
    		        String perm = res.getString("perm");
     		    boolean finalDecision = res.getBoolean("finalDecision");
-    		    
-   		       
+    		   
     		    DBTablePrinter.printTable(conn,"Submission");
     	        
    		//        System.out.println(journalISSN +"\t"+ submissionID +"\t"+ submissionTitle +"\t"+ submissionAbstract +"\t"+ submissionLink +"\t"+ mainAuthor +"\t"+ 
@@ -1268,7 +1237,7 @@ public class Database {
     //  Create all tables
  //       initialiseSubmissionTable();
  //       initialiseArticleTable();
- //       initialiseEditorsTable();
+        initialiseCoEditorsTable();
  //       initialiseJournalTable();                        
  //       initialiseReviewTable();                       
  //       initialiseUsertable(); */
