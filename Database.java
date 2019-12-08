@@ -152,7 +152,7 @@ public class Database {
         try {
         	openConnection();
     	    ResultSet res = stmt.executeQuery("SELECT * FROM Article");
-    	    System.out.format("%30s%50s%30s%250s%20s%20s\n", "ArticleID", "JournalISSN", "Title", "Abstract", "File", "MainAuthor");
+    	    System.out.format("%50s%50s%50s%250s%50s%50s\n", "ArticleID", "JournalISSN", "Title", "Abstract", "File", "MainAuthor");
     	    while (res.next()) {
     	        int articleID = res.getInt("articleID");
     	        int journalISSN = res.getInt("journalISSN");
@@ -161,7 +161,7 @@ public class Database {
     		    String file = res.getString("file");
     		    String mainAuthor = res.getString("mainAuthor");
     		    
-    		    System.out.format("%30d%50d%30s%250s%20s%20s\n", articleID, journalISSN, title, abstracts, file, mainAuthor);
+    		    System.out.format("%50d%50d%50s%250s%50s%50s\n", articleID, journalISSN, title, abstracts, file, mainAuthor);
        	}
        	res.close();
        	}
@@ -208,7 +208,7 @@ public class Database {
                                         String mainAuthor = res.getString("mainAuthor");
                                         System.out.println(mainAuthor);}	
                                     break;
-       	        case("*"): System.out.format("%30s%50s%30s%250s%20s%20s\n", "ArticleID", "JournalISSN", "Title", "Abstract", "File", "MainAuthor");
+       	        case("*"): System.out.format("%50s%50s%50s%250s%50s%50s\n", "ArticleID", "JournalISSN", "Title", "Abstract", "File", "MainAuthor");
                            while (res.next()) {
                                String articleID = res.getString("articleID");
                                int journalISSN = res.getInt("journalISSN");
@@ -217,7 +217,7 @@ public class Database {
 	                           String file = res.getString("file");
 	                           String mainAuthor = res.getString("mainAuthor");
 	                           
-	                           System.out.format("%30d%50d%30s%250s%20s%20s\n", articleID, journalISSN, title, abstracts, file, mainAuthor);}
+	                           System.out.format("%50d%50d%50s%250s%50s%50s\n", articleID, journalISSN, title, abstracts, file, mainAuthor);}
                            break;
                 default: System.out.println("Wrong command");               
        	}
@@ -236,7 +236,7 @@ public class Database {
         	openConnection();// 
     	    ResultSet res = stmt.executeQuery("SELECT ar.JournalISSN, jo.Volume, jo.Edition, jo.PageNum,  ar.Title, ar.Abstracts, ar.MainAuthor, ca.Author, "
     	    	+ "ar.File FROM Article ar, CoAuthors ca, Journal jo WHERE ca.ArticleID = ar.ArticleID AND ar.JournalISSN = jo.JournalISSN");
-    	    System.out.format("%10s%50s%20s%100s%30s%250s%20s%20s%20s\n","JournalISSN", "Volume", "Edition", "PageNum", "Title", "Abstract", "MainAuthor", "Author", "File");
+    	    System.out.format("%50s%50s%50s%100s%50s%250s%50s%50s%50s\n","JournalISSN", "Volume", "Edition", "PageNum", "Title", "Abstract", "MainAuthor", "Author", "File");
     	    while (res.next()) {
     	    	int journalISSN = res.getInt("journalISSN");
     	    	String volume = res.getString("volume");
@@ -248,7 +248,7 @@ public class Database {
     		    String author = res.getString("author");
     		    String file = res.getString("file");
     		    
-    		    System.out.format("%10d%50s%20s%100d%30s%250s%20s%20s%20s\n", journalISSN, volume, edition, pageNum, title, abstracts, mainAuthor, author, file);
+    		    System.out.format("%50d%50s%50s%100d%50s%250s%50s%50s%50s\n", journalISSN, volume, edition, pageNum, title, abstracts, mainAuthor, author, file);
        	}
        	res.close();
        	}
@@ -268,7 +268,7 @@ public class Database {
     	        + "su.SubmissionTitle, su.SubmissionAbstract, re.AnonymousID, re.InitialVerdict, re.Critisisms, re.Response, re.FinalVerdict "
     	        + "FROM Submission su, CoAuthors ca, Journal jo, Review re WHERE ca.SubmissionID = su.SubmissionID AND re.SubmissionID = su.SubmissionID "
     	        + "AND su.JournalISSN = jo.JournalISSN AND su.MainAuthor = '"+mainAuthor+"'");
-    	    System.out.format("%20s%10s%20s%100s%20s%20s%40s%250s%14s%18s%100s%100s%18s\n","JournalISSN", "Volume", "Edition", "PageNum", "File",
+    	    System.out.format("%40s%40s%40s%100s%40s%40s%40s%250s%40s%40s%100s%100s%40s\n","JournalISSN", "Volume", "Edition", "PageNum", "File",
     	    	"EditedArticle", "Title", "Abstract", "AnonymousID", "InitialVerdict", "Critisism", "Response", "FinalVerdict");
     	    while (res.next()) {
     	    	int journalISSN = res.getInt("journalISSN");
@@ -285,7 +285,7 @@ public class Database {
     		    String response = res.getString("response");
     		    String finalVerdict = res.getString("finalVerdict");
     		    
-    		    System.out.format("%20d%10s%20s%100d%20s%20s%40s%250s%14d%18s%100s%100s%18s\n", journalISSN, volume, edition, pageNum, 
+    		    System.out.format("%40d%40s%40s%100d%40s%40s%40s%250s%40d%40s%100s%100s%40s\n", journalISSN, volume, edition, pageNum, 
     		    	submissionLink, editedArticle, submissionTitle, submissionAbstract, anonymousID, initialVerdict, critisism, response, finalVerdict);
        	}
        	res.close();
@@ -362,13 +362,13 @@ public class Database {
         try {
         	openConnection();
     	    ResultSet res = stmt.executeQuery("SELECT * FROM CoAuthors");
-    	    System.out.format("%20s%50s%30s\n", "Author", "SubmissionID", "ArticleID");
+    	    System.out.format("%50s%50s%50s\n", "Author", "SubmissionID", "ArticleID");
     	    while (res.next()) {
     	    	String author = res.getString("author");
     	        int submissionId = res.getInt("submissionId");
     		    int articleID = res.getInt("articleID");
     		    		    
-    		    System.out.format("%20s%50d%30d\n", author, submissionId, articleID); 
+    		    System.out.format("%50s%50d%50d\n", author, submissionId, articleID); 
        	}
        	res.close();
        	}
@@ -400,13 +400,13 @@ public class Database {
 			                          int articleID = res.getInt("articleID");
 			                          System.out.println(articleID);}
 			                      break;
-       	        case("*"): System.out.format("%20s%50s%30s\n", "Author", "SubmissionID", "ArticleID");
+       	        case("*"): System.out.format("%50s%50s%50s\n", "Author", "SubmissionID", "ArticleID");
                            while (res.next()) {
                         	   String author = res.getString("author");
                    	           int submissionId = res.getInt("submissionId");
                    	        int articleID = res.getInt("articleID");
                    		       
-                   		       System.out.format("%20s%50d%30d\n", author, submissionId, articleID);}
+                   		       System.out.format("%50s%50d%50d\n", author, submissionId, articleID);}
                            break;
                 default: System.out.println("Wrong command");               
        	}
@@ -428,7 +428,7 @@ public class Database {
     	        + "re.InitialVerdict, re.Critisisms, re.Response, re.FinalVerdict, su.SubmissionLink FROM Submission su, CoAuthors ca, Journal jo, Review re "
     	        + "WHERE ca.SubmissionID = su.SubmissionID AND re.SubmissionID = su.SubmissionID AND su.JournalISSN = jo.JournalISSN AND "
     	        + "ca.Author = '"+coAuthor+"'");
-    	    System.out.format("%20s%10s%20s%40s%250s%14s%18s%100s%100s%18s%20s\n","JournalISSN", "Volume", "Edition", "Title", "Abstract", 
+    	    System.out.format("%40s%40s%40s%40s%250s%40s%40s%100s%100s%40s%40s\n","JournalISSN", "Volume", "Edition", "Title", "Abstract", 
     	    	"AnonymousID", "InitialVerdict", "Critisism", "Response", "FinalVerdict", "File");
     	    while (res.next()) {
     	    	int journalISSN = res.getInt("journalISSN");
@@ -443,7 +443,7 @@ public class Database {
     		    String finalVerdict = res.getString("finalVerdict");
     		    String submissionLink = res.getString("submissionLink");
     		    
-    		    System.out.format("%20d%10s%20s%40s%250s%14d%18s%100s%100s%18s%20s\n", journalISSN, volume, edition, submissionTitle, submissionAbstract,
+    		    System.out.format("%40d%40s%40s%40s%250s%40d%40s%100s%100s%40s%40s\n", journalISSN, volume, edition, submissionTitle, submissionAbstract,
     		    	anonymousID, initialVerdict, critisism, response, finalVerdict, submissionLink);
        	}
        	res.close();
@@ -463,7 +463,7 @@ public class Database {
     	    ResultSet res = stmt.executeQuery("SELECT su.JournalISSN, jo.Volume, jo.Edition, jo.PageNum, su.SubmissionTitle, su.SubmissionAbstract, "
     	    	+ "su.SubmissionLink, su.Perm, su.FinalDecision FROM Submission su, Journal jo WHERE su.JournalISSN = jo.JournalISSN AND "
     	    	+ "jo.ChiefEditor = '"+chiefEditor+"'");    
-    	    System.out.format("%50s%10s%20s%100s%40s%250s%20s%14s%18s\n","JournalISSN", "Volume", "Edition", "PageNum", "Title", "Abstract", "File",
+    	    System.out.format("%50s%50s%50s%100s%50s%250s%50s%50s%50s\n","JournalISSN", "Volume", "Edition", "PageNum", "Title", "Abstract", "File",
     	    	"Permission", "FinalDecision");
     	    while (res.next()) {
     	    	int journalISSN = res.getInt("journalISSN");
@@ -476,7 +476,7 @@ public class Database {
     		    String perm = res.getString("perm");
     		    String finalDecision = res.getString("finalDecision");
     		    
-    		    System.out.format("%50d%10s%20s%100d%40s%250s%20s%14s%18s\n", journalISSN, volume, edition, pageNum, submissionTitle, submissionAbstract,
+    		    System.out.format("%50d%50s%50s%100d%50s%250s%50s%50s%50s\n", journalISSN, volume, edition, pageNum, submissionTitle, submissionAbstract,
     		    	submissionLink, perm, finalDecision);
        	}
        	res.close();
@@ -547,12 +547,12 @@ public class Database {
         try {
         	openConnection();
     	    ResultSet res = stmt.executeQuery("SELECT * FROM CoEditors");
-    	    System.out.format("%50s%30s\n", "JournalISSN", "Editor");
+    	    System.out.format("%50s%50s\n", "JournalISSN", "Editor");
     	    while (res.next()) {
     	    	int journalISSN = res.getInt("journalISSN");     
        		    String editor = res.getString("editor");
     		    		    
-       		    System.out.format("%50d%30s\n", journalISSN, editor);  
+       		    System.out.format("%50d%50s\n", journalISSN, editor);  
        	}
        	res.close();
        	}
@@ -579,12 +579,12 @@ public class Database {
                                     String editor = res.getString("editor");
                                     System.out.println(editor);}	
                                 break;
-       	        case("*"): System.out.format("%50s%30s\n", "JournalISSN", "Editor");
+       	        case("*"): System.out.format("%50s%50s\n", "JournalISSN", "Editor");
                            while (res.next()) {
                         	   int journalISSN = res.getInt("journalISSN");     
                       		   String editor = res.getString("editor");
                    		    		    
-                      		   System.out.format("%50d%30s\n", journalISSN, editor);}
+                      		   System.out.format("%50d%50s\n", journalISSN, editor);}
                            break;
                 default: System.out.println("Wrong command");               
        	}
@@ -605,7 +605,7 @@ public class Database {
     	    ResultSet res = stmt.executeQuery("SELECT su.JournalISSN, jo.Volume, jo.Edition, jo.PageNum, su.SubmissionTitle, su.SubmissionAbstract, "
     	    	+ "su.SubmissionLink, su.Perm, su.FinalDecision FROM Submission su, Journal jo, CoEditors ce WHERE su.JournalISSN = jo.JournalISSN "
     	    	+ "AND ce.JournalISSN = jo.JournalISSN AND ce.Editor = '"+editor+"'");    
-    	    System.out.format("%50s%10s%20s%100s%40s%250s%20s%14s%18s\n","JournalISSN", "Volume", "Edition", "PageNum", "Title", "Abstract", "File",
+    	    System.out.format("%50s%50s%50s%100s%50s%250s%50s%50s%50s\n","JournalISSN", "Volume", "Edition", "PageNum", "Title", "Abstract", "File",
     	    	"Permission", "FinalDecision");
     	    while (res.next()) {
     	    	int journalISSN = res.getInt("journalISSN");
@@ -619,7 +619,7 @@ public class Database {
     		    String finalDecision = res.getString("finalDecision");
     		    
     		    
-    		    System.out.format("%50d%10s%20s%100d%40s%250s%20s%14s%18s\n", journalISSN, volume, edition, pageNum, submissionTitle, submissionAbstract,
+    		    System.out.format("%50d%50s%50s%100d%50s%250s%50s%50s%50s\n", journalISSN, volume, edition, pageNum, submissionTitle, submissionAbstract,
     		    	submissionLink, perm, finalDecision);
        	}
        	res.close();
@@ -710,7 +710,7 @@ public class Database {
         try {
    	        openConnection();
    	        ResultSet res = stmt.executeQuery("SELECT * FROM Journal");
-   	        System.out.format("%30s%50s%10s%20s%100s%20s\n", "Title", "JournalISSN", "Volume", "Edition", "PageNum", "ChiefEditor");
+   	        System.out.format("%50s%50s%50s%50s%100s%50s\n", "Title", "JournalISSN", "Volume", "Edition", "PageNum", "ChiefEditor");
    	        while (res.next()) {
    	        	String title = res.getString("title");
    		        int journalISSN = res.getInt("journalISSN");
@@ -718,8 +718,8 @@ public class Database {
    		        String edition = res.getString("edition");
    		        int pageNum = res.getInt("pageNum");
    		        String chiefEditor = res.getString("chiefEditor");
-   		 
-   		        System.out.format("%30s%50d%10s%20s%100d%20s\n", title, journalISSN, volume, edition, pageNum, chiefEditor);
+   		
+   		        System.out.format("%50s%50d%50s%50s%100d%50s\n", title, journalISSN, volume, edition, pageNum, chiefEditor);
             }
    	    res.close();
    	    }
@@ -766,7 +766,7 @@ public class Database {
                                          String chiefEditor = res.getString("chiefEditor");
                                          System.out.println(chiefEditor);}	
                                      break;
-       	        case("*"): System.out.format("%30s%50s%10s%20s%100s%20s\n", "Title", "JournalISSN", "Volume", "Edition", "PageNum", "ChiefEditor");
+       	        case("*"): System.out.format("%50s%50s%50s%50s%100s%50s\n", "Title", "JournalISSN", "Volume", "Edition", "PageNum", "ChiefEditor");
                            while (res.next()) {
                         	   String title = res.getString("title");
                         	   int journalISSN = res.getInt("journalISSN");
@@ -775,7 +775,7 @@ public class Database {
                         	   int pageNum = res.getInt("pageNum");
                         	   String chiefEditor = res.getString("chiefEditor");
 	 
-                        	   System.out.format("%30s%50d%10s%20s%100d%20s\n", title, journalISSN, volume, edition, pageNum, chiefEditor);}
+                        	   System.out.format("%50s%50d%50s%50s%100d%50s\n", title, journalISSN, volume, edition, pageNum, chiefEditor);}
                            break;
                 default: System.out.println("Wrong command");               
        	}
@@ -876,7 +876,7 @@ public class Database {
         try {
    	        openConnection();
    	        ResultSet res = stmt.executeQuery("SELECT * FROM Review");
-   	        System.out.format("%20s%10s%30s%4s%15s%100s%100s%15s\n", "ReviewID", "Reviewer", "SubmissionID", "AnonymousID", "InitialVerdict", "Critisisms", 
+   	        System.out.format("%30s%30s%30s%30s%30s%100s%100s%30s\n", "ReviewID", "Reviewer", "SubmissionID", "AnonymousID", "InitialVerdict", "Critisisms", 
    	        	"Response", "FinalVerdict");
    	        while (res.next()) {
    	        	int reviewID = res.getInt("reviewID");
@@ -888,7 +888,7 @@ public class Database {
    		        String response = res.getString("response");
    		        String finalVerdict = res.getString("finalVerdict");
    		 
-   		        System.out.format("%20d%10s%30d%4d%15s%100s%100s%15s\n", reviewID, reviewer, submissionID, anonymousID, initialVerdict, critisisms, 
+   		        System.out.format("%30d%30s%30d%30d%30s%100s%100s%30s\n", reviewID, reviewer, submissionID, anonymousID, initialVerdict, critisisms, 
    		        	response, finalVerdict);
             }
    	    res.close();
@@ -946,7 +946,7 @@ public class Database {
        	        				    	  String finalVerdict = res.getString("finalVerdict");
        	        				          System.out.println(finalVerdict);}	
        	        				      break;
-       	        case("*"): System.out.format("%20s%10s%30s%4s%15s%100s%100s%15s\n", "ReviewID", "Reviewer", "SubmissionID", "AnonymousID", "InitialVerdict", 
+       	        case("*"): System.out.format("%30s%30s%30s%30s%30s%100s%100s%30s\n", "ReviewID", "Reviewer", "SubmissionID", "AnonymousID", "InitialVerdict", 
        	        		       "Critisisms", "Response", "FinalVerdict");
                            while (res.next()) {
                         	   int reviewID = res.getInt("reviewID");
@@ -958,7 +958,7 @@ public class Database {
                         	   String response = res.getString("response");
                         	   String finalVerdict = res.getString("finalVerdict");
 	 
-                        	   System.out.format("%20d%10s%30d%4d%15s%100s%100s%15s\n", reviewID, reviewer, submissionID, anonymousID, initialVerdict, 
+                        	   System.out.format("%30d%30s%30d%30d%30s%100s%100s%30s\n", reviewID, reviewer, submissionID, anonymousID, initialVerdict, 
                         		   critisisms, response, finalVerdict);}
                            break;
                 default: System.out.println("Wrong command");               
@@ -979,7 +979,7 @@ public class Database {
    	        openConnection();
    	        ResultSet res = stmt.executeQuery("SELECT su.JournalISSN, jo.Volume, jo.Edition, su.Title, su.Abstracts, su.MainAuthor, ca.Author, " + 
    	        	"su.File FROM Submission su, CoAuthors ca, Journal jo WHERE su.SubmissionID = ca.SubmissionID AND su.JournalISSN = jo.JournalISSN");
-   	        System.out.format("%30s%10s%20s%40s%250s%20s%20s%20s\n", "JournalISSN", "Volume", "Edition", "Title", "Abstract", "MainAuthor", "Author", "File");
+   	        System.out.format("%40s%40s%40s%40s%250s%40s%40s%40s\n", "JournalISSN", "Volume", "Edition", "Title", "Abstract", "MainAuthor", "Author", "File");
    	        while (res.next()) {
    	        	int journalISSN = res.getInt("journalISSN");
     	    	String volume = res.getString("volume");
@@ -990,7 +990,7 @@ public class Database {
     		    String author = res.getString("author");
     		    String file = res.getString("file");
    		 
-   		        System.out.format("%30d%10s%20s%40s%250s%20s%20s%20s\n", journalISSN, volume, edition, title, abstracts, mainAuthor, author, file);
+   		        System.out.format("%40d%40s%40s%40s%250s%40s%40s%40s\n", journalISSN, volume, edition, title, abstracts, mainAuthor, author, file);
             }
    	    res.close();
    	    }
@@ -1119,7 +1119,7 @@ public class Database {
         try {
    	        openConnection();
    	        ResultSet res = stmt.executeQuery("SELECT * FROM Submission");
-   	        System.out.format("%20s%30s%40s%250s%20s%20s%20s%10s%20s%20s%20s%10s%8s\n", "JournalISSN", "SubmissionID", "SubmissionTitle",
+   	        System.out.format("%40s%40s%40s%250s%40s%40s%40s%40s%40s%40s%40s%40s%40s\n", "JournalISSN", "SubmissionID", "SubmissionTitle",
    	        	"SubmissionAbstract", "SubmissionLink", "EditedArticle", "MainAuthor", "Status", "Review1", "Review2", "Review3", "Perm", "FinalDecision");
    	        while (res.next()) {
    	        	int journalISSN = res.getInt("journalISSN");
@@ -1136,7 +1136,7 @@ public class Database {
    		        String perm = res.getString("perm");
     		    boolean finalDecision = res.getBoolean("finalDecision");
     		   
-    		    System.out.format("%20d%30d%40s%250s%20s%20s%20s%10s%20d%20d%20d%10s%8s\n", journalISSN, submissionID, submissionTitle, submissionAbstract,
+    		    System.out.format("%40d%40d%40s%250s%40s%40s%40s%40s%40d%40d%40d%40s%40s\n", journalISSN, submissionID, submissionTitle, submissionAbstract,
     		    	submissionLink, editedArticle, mainAuthor, status, review1, review2 ,review3, perm, finalDecision);
             }
    	    res.close();
@@ -1219,7 +1219,7 @@ public class Database {
                                            boolean finalDecision = res.getBoolean("finalDecision");
                                            System.out.println(finalDecision);}	
                                        break;
-       	        case("*"): System.out.format("%20s%30s%40s%250s%20s%20s%20s%10s%20s%20s%20s%10s%8s\n", "JournalISSN", "SubmissionID", 
+       	        case("*"): System.out.format("%40s%40s%40s%250s%40s%40s%40s%40s%40s%40s%40s%40s%40s\n", "JournalISSN", "SubmissionID", 
        	        		       "SubmissionTitle", "SubmissionAbstract", "SubmissionLink", "EditedArticle", "MainAuthor", "Status", "Review1", 
        	        		       "Review2", "Review3", "Perm", "FinalDecision");
        	        		   while (res.next()) {
@@ -1237,7 +1237,7 @@ public class Database {
        	        			   String perm = res.getString("perm");
        	     		           boolean finalDecision = res.getBoolean("finalDecision");
        	     		            
-       	     		           System.out.format("%20d%30d%40s%250s%20s%20s%20s%10s%20d%20d%20d%10s%8s\n", journalISSN, submissionID, submissionTitle,
+       	     		           System.out.format("%40d%40d%40s%250s%40s%40s%40s%40s%40d%40d%40d%40s%40s\n", journalISSN, submissionID, submissionTitle,
        	     		        	   submissionAbstract, submissionLink, editedArticle, mainAuthor, status, review1, review2 ,review3, perm, finalDecision);}
        	        		       break;
                 default: System.out.println("Wrong command");               
@@ -1341,7 +1341,7 @@ public class Database {
         try {
        	    openConnection();
        	    ResultSet res = stmt.executeQuery("SELECT * FROM User");
-       	    System.out.format("%6s%20s%20s%50s%30s%15s%14s%14s%14s\n", "Title", "Forename", "Surname", "University", "LoginID", "Password", 
+       	    System.out.format("%10s%50s%50s%50s%50s%50s%50s%50s%50s\n", "Title", "Forename", "Surname", "University", "LoginID", "Password", 
        	        "IsReviewer", "IsEditor", "IsAuthor");
        	    while (res.next()) {
        	        String title = res.getString("title");
@@ -1354,7 +1354,7 @@ public class Database {
        		    boolean isEditor = res.getBoolean("isEditor");
        		    boolean isAuthor = res.getBoolean("isAuthor");
        		    
-       		    System.out.format("%6s%20s%20s%50s%30s%15s%14s%14s%14s\n", title, forename, surname, university, loginID, password, isReviewer, 
+       		    System.out.format("%10s%50s%50s%50s%500s%50s%50s%50s%50s\n", title, forename, surname, university, loginID, password, isReviewer, 
        		        isEditor, isAuthor);
        	
        	    }
@@ -1418,7 +1418,7 @@ public class Database {
                                       boolean isAuthor = res.getBoolean("isAuthor");
                                       System.out.println(isAuthor);}	
                                   break;
-       	        case("*"): System.out.format("%6s%20s%20s%50s%30s%15s%14s%14s%14s\n", "Title", "Forename", "Surname", "University", "LoginID", 
+       	        case("*"): System.out.format("%10s%50s%50s%50s%50s%50s%50s%50s%50s\n", "Title", "Forename", "Surname", "University", "LoginID", 
        	        		       "Password", "IsReviewer", "IsEditor", "IsAuthor");
        	                   while (res.next()) {
         	                   String title = res.getString("title");
@@ -1431,7 +1431,7 @@ public class Database {
         		               boolean isEditor = res.getBoolean("isEditor");
         		               boolean isAuthor = res.getBoolean("isAuthor");
         		 
-        		               System.out.format("%6s%20s%20s%50s%30s%15s%14s%14s%14s\n", title, forename, surname, university, loginID, password, 
+        		               System.out.format("%10s%50s%50s%50s%50s%50s%50s%50s%50s\n", title, forename, surname, university, loginID, password, 
         		            	   isReviewer, isEditor, isAuthor);}
        	                   break;
         		
