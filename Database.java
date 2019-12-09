@@ -266,8 +266,8 @@ public class Database {
         	openConnection();// 
     	    ResultSet res = stmt.executeQuery("SELECT su.JournalISSN, jo.Volume, jo.Edition, jo.PageNum, su.SubmissionLink, su.EditedArticle, "
     	        + "su.SubmissionTitle, su.SubmissionAbstract, re.AnonymousID, re.InitialVerdict, re.Critisisms, re.Response, re.FinalVerdict "
-    	        + "FROM Submission su, CoAuthors ca, Journal jo, Review re WHERE ca.SubmissionID = su.SubmissionID AND re.SubmissionID = su.SubmissionID "
-    	        + "AND su.JournalISSN = jo.JournalISSN AND su.MainAuthor = '"+mainAuthor+"'");
+    	        + "FROM Submission su, Journal jo, Review re WHERE re.SubmissionID = su.SubmissionID AND su.JournalISSN = jo.JournalISSN AND "
+    	        + "su.MainAuthor = '"+mainAuthor+"'");
     	    System.out.format("%40s%40s%40s%100s%40s%40s%40s%250s%40s%40s%100s%100s%40s\n","JournalISSN", "Volume", "Edition", "PageNum", "File",
     	    	"EditedArticle", "Title", "Abstract", "AnonymousID", "InitialVerdict", "Critisism", "Response", "FinalVerdict");
     	    while (res.next()) {
